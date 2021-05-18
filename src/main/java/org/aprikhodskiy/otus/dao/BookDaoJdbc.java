@@ -22,7 +22,7 @@ public class BookDaoJdbc implements BookDao {
         this.namedParameterJdbcOperations = namedParameterJdbcOperations;
     }
 
-    private static final String SQL_SELECT_BASE = "select b.*, a.id as authorId, a.name as authorName, g.id as genreId, g.name as genreName " +
+    private static final String SQL_SELECT_BASE = "select b.id, b.name, a.id as authorId, a.name as authorName, g.id as genreId, g.name as genreName " +
             "from books b " +
             "join authors a on a.id = b.author_id " +
             "join genres g on g.id = b.genre_id ";
