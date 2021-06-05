@@ -32,15 +32,6 @@ class CommentRepositoryJpaImplTest {
         assertThat(comments.size()).isGreaterThan(4);
     }
 
-
-    @DisplayName("должен загружать список комментариев по книге")
-    @Test
-    void shouldReturnCorrectCommentsListByBook() {
-        var comments = repositoryJpa.findByBookId(5L);
-        assertNotNull(comments);
-        assertThat(comments.size()).isEqualTo(3);
-    }
-
     @DisplayName("должен получать комментарий по id  ")
     @Test
     void shouldReturnCorrectCommentById() {
@@ -53,8 +44,8 @@ class CommentRepositoryJpaImplTest {
     @DisplayName("должен уметь добавлять комментарий ")
     @Test
     void shouldAddNewComment() {
-        Long bookId = 4L;
-        int initialCount = repositoryJpa.findByBookId(bookId).size();
+        long bookId = 4L;
+        int initialCount = repositoryJpa.findAll().size();
 
         Comment newComment = Comment.builder()
                 .text("Some text")
@@ -63,7 +54,7 @@ class CommentRepositoryJpaImplTest {
 
         repositoryJpa.save(newComment);
 
-        assertThat(initialCount + 1).isEqualTo(repositoryJpa.findByBookId(bookId).size());
+        assertThat(initialCount + 1).isEqualTo(repositoryJpa.findAll().size());
     }
 
     @DisplayName("должен уметь обновлять комментарий ")
@@ -72,7 +63,7 @@ class CommentRepositoryJpaImplTest {
         Comment commentBeforeUpdate = repositoryJpa.findById(77).orElse(null);
         assertEquals("This will be updated by test", commentBeforeUpdate.getText());
         commentBeforeUpdate.setText("textAfterUpdate");
-        repositoryJpa.save(commentBeforeUpdate);;
+        repositoryJpa.save(commentBeforeUpdate);
         em.flush();
         Comment commentAfterUpdate = repositoryJpa.findById(77).orElse(null);
         assertEquals("textAfterUpdate", commentAfterUpdate.getText());
@@ -90,5 +81,4 @@ class CommentRepositoryJpaImplTest {
 
         assertThat(initialCount - 1).isEqualTo(repositoryJpa.findAll().size());
     }
-
 }

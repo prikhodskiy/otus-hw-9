@@ -47,13 +47,4 @@ public class CommentRepositoryJpaImpl implements CommentRepositoryJpa {
         query.setParameter("id", id);
         query.executeUpdate();
     }
-
-    @Override
-    public List<Comment> findByBookId(Long bookId) {
-        TypedQuery<Comment> query = em.createQuery(
-                "select c from Comment c where c.bookId = :book_id",
-                Comment.class);
-        query.setParameter("book_id", bookId);
-        return query.getResultList();
-    }
 }

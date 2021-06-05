@@ -2,7 +2,6 @@ package org.aprikhodskiy.otus.repositories;
 
 import org.aprikhodskiy.otus.models.Author;
 import org.aprikhodskiy.otus.models.Book;
-import org.aprikhodskiy.otus.models.Comment;
 import org.aprikhodskiy.otus.models.Genre;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.EmptyResultDataAccessException;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("Репозиторий на основе Jpa для работы с книгами")
 @DataJpaTest
@@ -78,7 +78,6 @@ class BookRepositoryJpaImplTest {
         repositoryJpa.save(newBook);
 
         assertThat(initialCount + 1).isEqualTo(repositoryJpa.findAll().size());
-
     }
 
     @DisplayName("должен уметь обновлять книгу ")
@@ -104,6 +103,15 @@ class BookRepositoryJpaImplTest {
         em.flush();
 
         assertThat(initialCount - 1).isEqualTo(repositoryJpa.findAll().size());
+    }
+
+
+    @DisplayName("должен загружать список комментариев по книге")
+    @Test
+    void shouldReturnCorrectCommentsListByBook() {
+        var comments = repositoryJpa.findById(5L).orElseThrow().getComments();
+        assertNotNull(comments);
+        assertThat(comments.size()).isEqualTo(3);
     }
 
     Author getDostoevsky() {
