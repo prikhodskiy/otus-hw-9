@@ -12,14 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Репозиторий на основе Jpa для работы с авторами ")
 @DataJpaTest
-@Import(AuthorRepositoryJpaImpl.class)
-class AuthorRepositoryJpaImplTest {
+class AuthorRepositoryTest {
 
     @Autowired
-    AuthorRepositoryJpaImpl repositoryJpa;
-
-    @Autowired
-    TestEntityManager em;
+    AuthorRepository repositoryJpa;
 
     @DisplayName("должен загружать список всех авторов ")
     @Test

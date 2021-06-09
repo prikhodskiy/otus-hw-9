@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -17,11 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("Репозиторий на основе Jpa для работы с книгами")
 @DataJpaTest
-@Import(BookRepositoryJpaImpl.class)
-class BookRepositoryJpaImplTest {
+class BookRepositoryTest {
 
     @Autowired
-    BookRepositoryJpaImpl repositoryJpa;
+    BookRepository repositoryJpa;
 
     @Autowired
     TestEntityManager em;
@@ -37,7 +35,7 @@ class BookRepositoryJpaImplTest {
     @DisplayName("должен загружать всю информацию о книге  ")
     @Test
     void shouldReturnCorrectBookById() {
-        var book = repositoryJpa.findById(3).orElse(null);
+        var book = repositoryJpa.findById(3L).orElse(null);
 
         assertNotNull(book);
         assertThat(book.getAuthor()).isEqualTo(getDostoevsky());
@@ -83,23 +81,23 @@ class BookRepositoryJpaImplTest {
     @DisplayName("должен уметь обновлять книгу ")
     @Test
     void shouldUpdateBook() {
-        Book bookBeforeUpdate = repositoryJpa.findById(77).orElse(null);
+        Book bookBeforeUpdate = repositoryJpa.findById(77L).orElse(null);
         assertEquals("This will be updated by test", bookBeforeUpdate.getName());
         bookBeforeUpdate.setName("nameAfterUpdate");
         repositoryJpa.save(bookBeforeUpdate);
         em.flush();
-        Book bookAfterUpdate = repositoryJpa.findById(77).orElse(null);
+        Book bookAfterUpdate = repositoryJpa.findById(77L).orElse(null);
         assertEquals("nameAfterUpdate", bookAfterUpdate.getName());
     }
 
     @DisplayName("должен уметь удалять книгу")
     @Test
     void shouldDeleteById() {
-        assertThatCode(() -> repositoryJpa.findById(13))
+        assertThatCode(() -> repositoryJpa.findById(13L))
                 .doesNotThrowAnyException();
         int initialCount = repositoryJpa.findAll().size();
 
-        repositoryJpa.deleteById(13);
+        repositoryJpa.deleteById(13L);
         em.flush();
 
         assertThat(initialCount - 1).isEqualTo(repositoryJpa.findAll().size());

@@ -12,12 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Репозиторий на основе Jpa для работы с жанрами")
 @DataJpaTest
-@Import(GenreRepositoryJpaImpl.class)
-class GenreRepositoryJpaImplTest {
+class GenreRepositoryTest {
     @Autowired
-    GenreRepositoryJpaImpl repositoryJpa;
-    @Autowired
-    TestEntityManager em;
+    GenreRepository repositoryJpa;
 
     @DisplayName("должен загружать список всех жанров ")
     @Test
