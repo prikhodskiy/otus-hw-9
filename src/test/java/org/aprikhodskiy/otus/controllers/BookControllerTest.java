@@ -5,7 +5,7 @@ import org.aprikhodskiy.otus.dto.AuthorDto;
 import org.aprikhodskiy.otus.dto.BookDetailDto;
 import org.aprikhodskiy.otus.dto.BookDto;
 import org.aprikhodskiy.otus.dto.GenreDto;
-import org.aprikhodskiy.otus.services.LibraryService;
+import org.aprikhodskiy.otus.services.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,8 +19,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(LibraryController.class)
-class LibraryControllerTest {
+@WebMvcTest(BookController.class)
+class BookControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -29,7 +29,7 @@ class LibraryControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private LibraryService libraryService;
+    private BookService bookService;
 
     @Test
     void shouldReturnCorrectBooksList() throws Exception {
@@ -37,7 +37,7 @@ class LibraryControllerTest {
                 new BookDto(1, "book1", "author name", "genre name"),
                 new BookDto(2, "book2", "author name", "genre name")
         );
-        given(libraryService.findAllBooks()).willReturn(books);
+        given(bookService.findAllBooks()).willReturn(books);
 
         mvc.perform(get("/books"))
                 .andExpect(status().isOk())
@@ -48,7 +48,7 @@ class LibraryControllerTest {
     void shouldReturnCorrectBookById() throws Exception {
         BookDetailDto book = new BookDetailDto(2, "book2", new AuthorDto(5,"author name"), new GenreDto(3,"genre name"), null);
 
-        given(libraryService.fineOneBook(2L)).willReturn(book);
+        given(bookService.fineOneBook(2L)).willReturn(book);
 
         mvc.perform(get("/books/2"))
                 .andExpect(status().isOk())

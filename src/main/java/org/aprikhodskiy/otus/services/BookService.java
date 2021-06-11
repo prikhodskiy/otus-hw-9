@@ -1,7 +1,10 @@
 package org.aprikhodskiy.otus.services;
 
 import lombok.AllArgsConstructor;
-import org.aprikhodskiy.otus.dto.*;
+import org.aprikhodskiy.otus.dto.BookCreateDto;
+import org.aprikhodskiy.otus.dto.BookDetailDto;
+import org.aprikhodskiy.otus.dto.BookDto;
+import org.aprikhodskiy.otus.dto.ModelMapper;
 import org.aprikhodskiy.otus.exceptions.AuthorNotFoundException;
 import org.aprikhodskiy.otus.exceptions.BookNotFoundException;
 import org.aprikhodskiy.otus.exceptions.GenreNotFoundException;
@@ -17,48 +20,46 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
-public class LibraryService {
+@AllArgsConstructor
+public class BookService {
+
+    private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
-    private final BookRepository bookRepository;
     private final ResourceService resourceService;
 
-
-    @Transactional(readOnly = true)
-    public List<AuthorDto> findAllAuthors() {
-        return authorRepository.findAll()
-                .stream().map(AuthorDto::toDto)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<GenreDto> findAllGenres() {
-        return genreRepository.findAll()
-                .stream().map(GenreDto::toDto)
-                .collect(Collectors.toList());
+    private Book getBookOrThrow(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(resourceService.localize("book-not-found", id)));
     }
 
     @Transactional(readOnly = true)
     public List<BookDto> findAllBooks() {
         return bookRepository.findAll()
-                .stream().map(BookDto::toDto)
+                .stream().map(ModelMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public BookDetailDto fineOneBook(long bookId) {
-        return BookDetailDto.toDto(getBookOrThrow(bookId));
+        return ModelMapper.toDetailDto(getBookOrThrow(bookId));
     }
 
     public void deleteBook(Long bookId) {
         bookRepository.delete(getBookOrThrow(bookId));
     }
 
-    private Book getBookOrThrow(Long id) {
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(resourceService.localize("book-not-found", id)));
+    @Transactional
+    public BookDetailDto bookUpdate(Long bookId, BookCreateDto newBook) {
+        var book = getBookOrThrow(bookId);
+        book.setName(newBook.getName());
+        book.setGenre(getGenreOrThrow(newBook.getGenreId()));
+        book.setAuthor(getAuthorOrThrow(newBook.getAuthorId()));
+
+        var updatedBook = bookRepository.save(book);
+
+        return ModelMapper.toDetailDto(updatedBook);
     }
 
     private Genre getGenreOrThrow(Long id) {
@@ -81,18 +82,6 @@ public class LibraryService {
 
         var createdBook = bookRepository.save(book);
 
-        return BookDetailDto.toDto(createdBook);
-    }
-
-    @Transactional
-    public BookDetailDto bookUpdate(Long bookId, BookCreateDto newBook) {
-        var book = getBookOrThrow(bookId);
-        book.setName(newBook.getName());
-        book.setGenre(getGenreOrThrow(newBook.getGenreId()));
-        book.setAuthor(getAuthorOrThrow(newBook.getAuthorId()));
-
-        var updatedBook = bookRepository.save(book);
-
-        return BookDetailDto.toDto(updatedBook);
+        return ModelMapper.toDetailDto(createdBook);
     }
 }
