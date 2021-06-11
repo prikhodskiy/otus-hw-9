@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -15,11 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("Репозиторий на основе Jpa для работы с комментариями")
 @DataJpaTest
-@Import(CommentRepositoryJpaImpl.class)
-class CommentRepositoryJpaImplTest {
+class CommentRepositoryTest {
 
     @Autowired
-    CommentRepositoryJpaImpl repositoryJpa;
+    CommentRepository repositoryJpa;
 
     @Autowired
     TestEntityManager em;
@@ -35,7 +33,7 @@ class CommentRepositoryJpaImplTest {
     @DisplayName("должен получать комментарий по id  ")
     @Test
     void shouldReturnCorrectCommentById() {
-        var comment = repositoryJpa.findById(3).orElse(null);
+        var comment = repositoryJpa.findById(3L).orElse(null);
         assertNotNull(comment);
         assertEquals("comment 3", comment.getText());
     }
@@ -60,23 +58,23 @@ class CommentRepositoryJpaImplTest {
     @DisplayName("должен уметь обновлять комментарий ")
     @Test
     void shouldUpdateBook() {
-        Comment commentBeforeUpdate = repositoryJpa.findById(77).orElse(null);
+        Comment commentBeforeUpdate = repositoryJpa.findById(77L).orElse(null);
         assertEquals("This will be updated by test", commentBeforeUpdate.getText());
         commentBeforeUpdate.setText("textAfterUpdate");
         repositoryJpa.save(commentBeforeUpdate);
         em.flush();
-        Comment commentAfterUpdate = repositoryJpa.findById(77).orElse(null);
+        Comment commentAfterUpdate = repositoryJpa.findById(77L).orElse(null);
         assertEquals("textAfterUpdate", commentAfterUpdate.getText());
     }
 
     @DisplayName("должен уметь удалять комментарий")
     @Test
     void shouldDeleteById() {
-        assertThatCode(() -> repositoryJpa.findById(13))
+        assertThatCode(() -> repositoryJpa.findById(13L))
                 .doesNotThrowAnyException();
         int initialCount = repositoryJpa.findAll().size();
 
-        repositoryJpa.deleteById(13);
+        repositoryJpa.deleteById(13L);
         em.flush();
 
         assertThat(initialCount - 1).isEqualTo(repositoryJpa.findAll().size());

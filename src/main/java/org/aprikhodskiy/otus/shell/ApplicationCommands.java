@@ -3,10 +3,10 @@ package org.aprikhodskiy.otus.shell;
 import lombok.RequiredArgsConstructor;
 import org.aprikhodskiy.otus.exceptions.BookNotFoundException;
 import org.aprikhodskiy.otus.models.Book;
-import org.aprikhodskiy.otus.repositories.AuthorRepositoryJpaImpl;
-import org.aprikhodskiy.otus.repositories.BookRepositoryJpaImpl;
-import org.aprikhodskiy.otus.repositories.CommentRepositoryJpaImpl;
-import org.aprikhodskiy.otus.repositories.GenreRepositoryJpaImpl;
+import org.aprikhodskiy.otus.repositories.AuthorRepository;
+import org.aprikhodskiy.otus.repositories.BookRepository;
+import org.aprikhodskiy.otus.repositories.CommentRepository;
+import org.aprikhodskiy.otus.repositories.GenreRepository;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ApplicationCommands {
 
-    private final AuthorRepositoryJpaImpl authorRepository;
-    private final GenreRepositoryJpaImpl genreRepository;
-    private final BookRepositoryJpaImpl bookRepository;
-    private final CommentRepositoryJpaImpl commentRepository;
+    private final AuthorRepository authorRepository;
+    private final GenreRepository genreRepository;
+    private final BookRepository bookRepository;
+    private final CommentRepository commentRepository;
 
 
     @Transactional(readOnly = true)
