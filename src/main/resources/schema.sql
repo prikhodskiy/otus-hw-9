@@ -26,3 +26,11 @@ create table comments(
     book_id bigint,
     constraint fk_comments_books foreign key (book_id) references books (id)
 );
+
+create table users(
+    id bigint primary key auto_increment,
+    name varchar(255),
+    username varchar(80),
+    password varchar(255),
+    unique uq_users_1 (name)
+);

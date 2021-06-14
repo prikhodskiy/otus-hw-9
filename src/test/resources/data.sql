@@ -22,3 +22,8 @@ insert into comments (id, `text`, book_id) values (4, 'comment 4', 5);
 insert into comments (id, `text`, book_id) values (5, 'comment 5', 4);
 insert into comments (id, `text`, book_id) values (13, 'This will be deleted by test', 3);
 insert into comments (id, `text`, book_id) values (77, 'This will be updated by test', 3);
+
+
+insert into users (id, `name`, `username`, `password`) values (1, 'admin', 'admin', 'admin');
+insert into users (id, `name`, `username`, `password`) values (2, 'librarian', 'librarian', 'librarian');
+insert into users (id, `name`, `username`, `password`) values (3, 'student', 'student', 'student');
