@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -31,6 +32,7 @@ class BookControllerTest {
     @MockBean
     private BookService bookService;
 
+    @WithMockUser(username = "user", authorities = {"ROLE_ADMIN"})
     @Test
     void shouldReturnCorrectBooksList() throws Exception {
         List<BookDto> books = List.of(
@@ -44,9 +46,10 @@ class BookControllerTest {
                 .andExpect(content().json(mapper.writeValueAsString(books)));
     }
 
+    @WithMockUser(username = "user")
     @Test
     void shouldReturnCorrectBookById() throws Exception {
-        BookDetailDto book = new BookDetailDto(2, "book2", new AuthorDto(5,"author name"), new GenreDto(3,"genre name"), null);
+        BookDetailDto book = new BookDetailDto(2, "book2", new AuthorDto(5, "author name"), new GenreDto(3, "genre name"), null);
 
         given(bookService.fineOneBook(2L)).willReturn(book);
 

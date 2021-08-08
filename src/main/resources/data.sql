@@ -16,3 +16,7 @@ insert into comments (id, `text`, book_id) values (2, 'comment 2', 2);
 insert into comments (id, `text`, book_id) values (3, 'comment 3', 2);
 insert into comments (id, `text`, book_id) values (4, 'comment 4', 2);
 insert into comments (id, `text`, book_id) values (5, 'comment 5', 2);
+
+insert into users (id, `name`, `username`, `password`) values (1, 'admin', 'admin', 'admin');
+insert into users (id, `name`, `username`, `password`) values (2, 'librarian', 'librarian', 'librarian');
+insert into users (id, `name`, `username`, `password`) values (3, 'student', 'student', 'student');
